@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<% include ./../../partials/head.ejs %>
+	<body>
+		<% include ./../../navigation %>
+			<div class="container">
+				<div class="text-center">
+					<form class="form-signup" action="/signup" method="POST" enctype="multipart/form-data">
+						<img class="mb-4" src="https://www.clker.com/cliparts/i/s/K/X/9/F/book.svg" alt="" width="72" height="72">
+						<h1 class="h3 mb-3 font-weight-normal">Please sign up</h1>
+						<label for="inputUsername" class="sr-only">Username</label>
+						<input type="text" id="inputUsername" name="username" class="form-control" placeholder="Username" required autofocus>
+						<label for="inputEmail" class="sr-only">Email address</label>
+						<input type="email" id="inputEmail" name="email" class="form-control" placeholder="Email address" required autofocus>
+						<label for="inputPassword" class="sr-only">Password</label>
+						<input type="password" id="inputPassword" name="password" class="form-control" placeholder="Password" required>
+						<label for="rinputPassword" class="sr-only">Repeat Password</label>
+						<input type="password" id="rinputPassword" name="repassword" class="form-control" placeholder="Repeat Password" required>
+						<label for="rinputPassword" class="sr-only">Choose a Picture</label>
+						<input type="file" id="fileSelect" name="user_profile_photo" class="form-control" placeholder="Profile Picture" required>
+						<button class="btn btn-lg btn-primary btn-block" type="submit">Sign up</button>
+					</form>
+				</div>
+			</div>
+			<% include ./../../partials/script_includes %>
+	</body>
+
+</html>

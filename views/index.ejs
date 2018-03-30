@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<% include partials/head %>
+
+  <body>
+    <% include navigation %>
+      <div class="container-fluid">
+        <section class="jumbotron text-center">
+          <h1 class="jumbotron-heading">Hey <%=user.username%>! Welcome.</h1>
+          <p class="lead text-muted">Below are the list of Books available.</p>
+        </section>
+      </div>
+      <div class="album py-5">
+        <div class="container">
+          <div class="row">
+            <% for(var i=0; i<books.length; i++) {%>
+              <div class="col-md-3">
+                <div class="card mb-4 box-shadow">
+                  <a href="/book/show/<%=books[i].id%>"><img class="card-img-top" src="<%= books[i].image_path%>" alt="Card image cap"></a>
+                  <div class="card-body">
+                    <h5 class="card-title"><%= books[i].title%></h5>
+                    <p class="card-text">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Voluptas, rem.</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div class="btn-group" id="link-holder">
+                          <a href="/book/show/<%=books[i].id%>"><button type="button" class="btn btn-sm btn-outline-secondary">View</button></a>
+                          <form onsubmit="addToCart(event,'<%=books[i].id%>')">
+                            <input type="submit" class="btn btn-sm btn-outline-secondary" value="Add">
+                          </form>
+                      </div>
+                      <small class="text-muted"> ₹<%= books[i].price%></small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <% } %>
+          </div>
+        </div>
+      </div>
+      <% include partials/script_includes %>
+  </body>
+
+</html>

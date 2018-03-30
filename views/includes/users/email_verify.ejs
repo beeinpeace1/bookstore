@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<% include ./../../partials/head.ejs %>
+	<body>
+		<% include ./../../navigation %>
+			<div class="container">
+				<div class="text-center">
+					<form class="form-email-verify" action="/verify" method="POST">
+						<img class="mb-4" src="https://www.clker.com/cliparts/i/s/K/X/9/F/book.svg" alt="" width="72" height="72">
+                        <h1 class="h3 mb-3 font-weight-normal">Please input OTP</h1>
+						<label for="otp" class="sr-only">OTP</label>
+						<input type="number" id="otp" name="otp" class="form-control" placeholder="OTP">
+						<button class="btn btn-lg btn-primary btn-block" type="submit">Confirm</button>
+					</form>
+				</div>
+			</div>
+			<% include ./../../partials/script_includes %>
+	</body>
+
+</html>
