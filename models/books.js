@@ -8,6 +8,9 @@ var BookSchema = mongoose.Schema({
     author: {
         type: String,
     },
+    desc: {
+        type: String,
+    },
     price: {
         type: String,
     },

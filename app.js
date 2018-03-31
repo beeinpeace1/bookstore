@@ -13,7 +13,6 @@ var flash = require('connect-flash');
 
 // routes
 var index = require('./routes/index');
-var admin = require('./routes/admin/index');
 
 var app = express();
 
@@ -22,10 +21,9 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 // file upload handler
-app.use(multer({dest: './uploads'}).any())
-// uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-app.use(logger('dev'));
+app.use(multer({dest: './public/images'}).any())
+
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -56,11 +54,11 @@ app.use(function (req, res, next) {
 app.use('*', function(req, res, next){
   res.locals.user = req.user || null;
   res.locals.cart_total = req.session.cart ? req.session.cart.length: 0;
+  res.locals.isAdmin = req.session.isAdmin;
   next();
 })
 
 app.use('/', index);
-app.use('/admin', admin);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

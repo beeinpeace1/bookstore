@@ -1,55 +1,50 @@
 <!DOCTYPE html>
 <html>
-<% include ../partials/head %>
+<% include ./../partials/head %>
 
     <body>
-        <% include ../navigation %>
+        <% include ./../navigation %>
             <div class="album py-5">
                 <div class="container">
                     <div class="row px-0">
                         <!-- <div class="col-md-12"> -->
                         <div class="col-md-3 px-0">
-                        <form method="POST" action="/admin/add" enctype="multipart/form-data">
-                            <img class="card-img-top" style="height: 350px;" src="" alt="Card image cap">
-                            <input type="file" name="book_edit_image" id="book_image">
+                            <img class="card-img-top" style="height: 350px;" src="<%=book.image_path%>" alt="Card image cap">
                         </div>
                         <div class="col-md-9">
                             <div class="pl-4 pt-2" style="width: 100%; height: 350px; background: #fff; border-radius: 5px;">
                                 <div class="row">
                                     <div class="col-md-10">
-                                        <b>Title:</b><input type="text" name="title" id="titleBook" value="">
+                                        <h3><%=book.title%></h3>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-10">
-                                        <b>Desc: </b>
-                                        <textarea name="descBook" value="sads" id="" cols="80" rows="5"></textarea>
+                                        <p><%=book.desc%>
+                                        </p>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-10">
-                                        <b>Price:₹</b> <input type="text" name="price" value="">
+                                        <h2>₹<%=book.price%></h2>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-10">
-                                        <b>Author:</b> <input type="text" name="author" value="">
+                                        Author: <em><span><%=book.author%></span></em>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="py-2 col-md-10">
-                                            <input type="submit" class="btn btn-warning" value="Submit">
-                                            <input type="hidden" name="bookid" value="">
-                                        </form>
+                                    <div class="py-5 col-md-10">
+                                        <button class="btn btn-danger btn"><a href="/admin/listbooks" class="nav-link text-white" style="width: 100px;">Home</a></button>
                                     </div>
                                 </div>
                             </div>
-                        </form>
                         </div>
                     </div>
                 </div>
             </div>
-            <% include ../partials/script_includes %>
+            <% include ./../partials/script_includes %>
     </body>
 
 </html>

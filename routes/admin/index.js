@@ -1,12 +1,25 @@
-var express = require('express');
-var router = express.Router();
 var API = require('./../../models/dbapis');
-var passport = require('passport');
-var localStrategy = require('passport-local').Strategy;
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-    res.render('admin/login.ejs', {title: "Admin Page", path: 'admin'})
-});
-
-module.exports = router;
+module.exports = {
+    ensureAdmin: (req, res, next)=> {
+        const username = req.body.username;
+        const password = req.body.password;
+        API.getAdmin({email: username, password: password, isAdmin: true}, (d) => {
+            if(d){
+                req.session.isAdmin = true;
+                return next();
+            } else {
+                req.session.isAdmin = false;
+                res.redirect('/admin');
+            }
+        })
+  },
+  ensureAdminCheck: (req, res, next)=> {
+        if(req.session.isAdmin){
+            return next();
+        } else {
+            req.session.isAdmin = false;
+            res.redirect('/admin');
+        }
+    }
+}

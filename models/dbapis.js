@@ -69,7 +69,31 @@ module.exports = {
             if(err) {
                 console.log(err.message)
             }
-                cb(null, res);
+                cb(res);
         })
-    }
+    },
+    getAdmin: function(q, cb) {
+        User.findOne(q, function(err, res) {
+            if(err) {
+                console.log(err.message)
+            }
+            cb(res);
+        })
+    },
+    updateBook: function(id,d, cb) {
+        Books.findByIdAndUpdate(id, {$set: d}, { new: true }, (err, update) => {
+            if(err){
+                console.log(err);
+            }
+            cb(update);
+        })
+    },
+    removeBook: function(id, cb) {
+        Books.findByIdAndRemove(id, { rawResult: true }, (err, update) => {
+            if(err){
+                console.log(err);
+            }
+            cb(update);
+        })
+    },
 }

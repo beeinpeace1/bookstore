@@ -5,6 +5,7 @@ var signup = require('./users/signup');
 var API = require('./../models/dbapis');
 var passport = require('passport');
 var localStrategy = require('passport-local').Strategy;
+var Admin = require('./admin/index');
 
 /* GET home page. */
 router.get('/', ensureAuth, function(req, res, next) {
@@ -66,6 +67,10 @@ passport.deserializeUser(function(id, done) {
 passport.use(new localStrategy(
   function( username, password, done) {
     API.getUserByName(username, function(err, user) {
+      if(user.isAdmin) {
+        console.log("Admin Cant log in to user section");
+        return done(null, false, {message: "Admin User!"});
+      }
       if(err){
         console.log(err.message);
       }
@@ -91,7 +96,7 @@ passport.use(new localStrategy(
 ))
 
 function ensureAuth(req, res, next) {
-  if(req.isAuthenticated()){
+  if(req.isAuthenticated() && req.session.isAdmin == false){
     return next();
   } else {
     res.redirect('/login');
@@ -100,6 +105,7 @@ function ensureAuth(req, res, next) {
 
 // POST /login
 router.post('/login', passport.authenticate('local', { failureRedirect: '/login' }), function(req, res, next) {
+  req.session.isAdmin = false;
   res.redirect('/');
 });
 
@@ -169,4 +175,107 @@ router.post('/cart/add/:id', ensureAuth, (req, res, next) => {
     })
   }
 })
+
+
+//  admin part
+
+router.get('/admin', function (req, res, next) {
+  res.render('admin/login.ejs', { title: "Admin Page", path: 'admin' })
+});
+
+router.get('/admin/logout', function (req, res, next) {
+  if(req.session.isAdmin){
+    req.session.isAdmin = false;
+  }
+  res.redirect('/admin');
+});
+
+router.post('/admin/login', Admin.ensureAdmin, function (req, res, next) {
+  res.redirect('/admin/listbooks')
+});
+
+router.get('/admin/listbooks', Admin.ensureAdminCheck, function (req, res, next) {
+  API.getAllBooks(function(books){
+    res.render('admin/listbooks.ejs', {path: 'admin', title: 'Admin Dashboard', books: books})
+  })
+});
+
+router.get('/admin/edit/:id', Admin.ensureAdminCheck, function (req, res, next) {
+  var id = req.params.id;
+  if(id){
+    API.getBookById(id, (err, book) => {
+      if(book)
+        res.render('admin/editbook.ejs', {title: 'Book Store', path: 'admin', book: book});
+    })
+  }
+});
+
+router.get('/admin/add/', Admin.ensureAdminCheck, function (req, res, next) {
+      res.render('admin/addbook.ejs', {title: 'Book Store', path: 'admin'});
+});
+
+router.post('/admin/add/', Admin.ensureAdminCheck, function (req, res, next) {
+  const title = req.body.title || "no title available";
+  const desc = req.body.descBook || "no desc available";
+  const price = req.body.price || 0;
+  const author = req.body.author || "no author found";
+  const bookid = req.body.bookid || null;
+  const mime = req.files[0] ? req.files[0].mimetype.split('/')[1] : 'png';
+  const filename = req.files.length ? "/images/" + req.files[0].filename : '/images/defaultImage';
+
+  const updateBookDetails = {
+    title: title,
+    desc: desc,
+    price: price,
+    author: author,
+    image_path: filename
+  };
+
+  API.saveBookToDB(updateBookDetails, (updatedBook) => {
+    if(updatedBook){
+      res.redirect('/admin/listbooks');
+    }
+  })
+});
+
+router.post('/admin/delete', Admin.ensureAdminCheck, function (req, res, next) {
+  const bookid = req.body.bookid;
+  if(bookid){
+    API.removeBook(bookid, (book) => {
+      if(book)
+        res.redirect('/admin/listbooks')
+    })
+  }
+});
+
+router.post('/admin/edit/', Admin.ensureAdminCheck, function (req, res, next) {
+
+  const title = req.body.title || "no title available";
+  const desc = req.body.descBook || "no desc available";
+  const price = req.body.price || 0;
+  const author = req.body.author || "no author found";
+  const bookid = req.body.bookid || null;
+  const mime = req.files[0] ? req.files[0].mimetype.split('/')[1] : 'png';
+  var currentBook = {};
+  API.getBookById(bookid, (err, book) => {
+    if(book){
+      currentBook = book;
+
+      const filename = req.files.length ? "/images/" + req.files[0].filename : ( currentBook.image_path ? currentBook.image_path: '/images/defaultImage');
+  
+      const updateBookDetails = {
+        title: title,
+        desc: desc,
+        price: price,
+        author: author,
+        image_path: filename
+      };
+    
+      API.updateBook(bookid, updateBookDetails, (updatedBook) => {
+        res.render('admin/showbook.ejs', {title: 'Book Store', path: 'admin', book: updatedBook});
+      })  
+    }
+  })
+});
+
 module.exports = router;

@@ -28,7 +28,8 @@ module.exports = function(reqEx, resEx, next) {
         email: email,
         password: password,
         name: username,
-        profile_image: path || 'uploads/default.png'
+        profile_image: path || 'uploads/default.png',
+        isAdmin: false
     }
 
     global.users = {};
@@ -47,7 +48,7 @@ module.exports = function(reqEx, resEx, next) {
         if (error) {
           console.log(error);
         } else {
-          resEx.render('includes/users/email_verify', { path: '', title: 'Book Store', email: email});
+          resEx.render('includes/users/email_verify', { path: 'verify', title: 'Book Store', email: email});
         }
     });
 }
