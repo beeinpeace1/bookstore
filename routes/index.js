@@ -33,17 +33,18 @@ router.post('/verify', function(reqEx, resEx, next) {
     API.saveUserToDB(UserDetails, (err, res) => {
         if(err) {
             console.log(err);
-            if(err.code == 11000){
-              resEx.redirect('/signup');
-            }
+            resEx.render('includes/misc/intermediate.ejs', {title: 'Error', path: 'intermediate', class: 
+            "fas fa-times-circle fa-5x", message: "Failed"})
         }
 
         if(!err && res) {
-            resEx.redirect('/');
+            resEx.render('includes/misc/intermediate.ejs', {title: 'Success', path: 'intermediate', class: 
+            "fas fa-check-circle fa-5x", message: "Sucess"})
         }
     });
   } else {
-    resEx.redirect('/signup');
+    resEx.render('includes/misc/intermediate.ejs', {title: 'Wrong', path: 'intermediate', class: 
+    "fas fa-times-circle fa-5x", message: "OTP Entered is Wrong"})
   }
 });
 
@@ -103,7 +104,7 @@ router.post('/login', passport.authenticate('local', { failureRedirect: '/login'
 });
 
 // GET logout
-router.get('/logout', function(req, res, next) {
+router.get('/logout', ensureAuth, function(req, res, next) {
   req.logout();
   res.redirect('/login');
   req.session.cart = [];

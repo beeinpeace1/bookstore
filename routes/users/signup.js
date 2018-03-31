@@ -47,7 +47,7 @@ module.exports = function(reqEx, resEx, next) {
         if (error) {
           console.log(error);
         } else {
-          resEx.render('includes/users/email_verify', { path: '', title: 'Book Store'});
+          resEx.render('includes/users/email_verify', { path: '', title: 'Book Store', email: email});
         }
     });
 }
