@@ -6,6 +6,7 @@
 			<span class="navbar-toggler-icon"></span>
 		</button>
 		<% if(path == 'admin') {%>
+			
 			<style>
 				.navbar {
 					background: #e3003d !important;
@@ -14,6 +15,11 @@
 			<%}%>
 				<div class="collapse navbar-collapse" id="navbarCollapse">
 					<ul class="navbar-nav mr-auto">
+						<%if(path == 'admin'){%>
+							<li class="nav-item">
+								<a class="nav-link text-white" href="/login">Users</a>
+							</li>
+						<%}%>
 						<%if(!user && path != 'admin' && path != 'intermediate' && path != 'verify'){%>
 							<li class="nav-item <%= path == 'login' ? 'active': '' %>">
 								<a class="nav-link" href="/login">Sign in</a>
@@ -36,18 +42,37 @@
 								<%}%>
 					</ul>
 					<%if(user){%>
+						<form class="form-inline mt-2 mt-md-0 mr-2" method="POST" action="/user/search">
+							<input class="searchform form-control mr-sm-2" type="text" placeholder="Search" name="searchdata" aria-label="Search">
+							<button class="searchform btn btn-outline-info my-2 my-sm-0" type="submit">Search</button>
+						</form>
+						<ul class="navbar-nav navbar-right">
+							<li class="nav-item text-white">
+								<span>Hey! <%=user.username%>.</span>
+							</li>
+						</ul>
 						<ul class="navbar-nav navbar-right">
 							<li class="nav-item">
 								<a class="nav-link" href="/logout">Sign out</a>
 							</li>
 						</ul>
 					<%}%>
+					<%if(path == 'guest'){%>
+						<form class="form-inline mt-2 mt-md-0 mr-2" method="POST" action="/guest/search">
+							<input class="searchform form-control mr-sm-2" type="text" placeholder="Search" name="searchdata" aria-label="Search">
+							<button class="searchform btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
+						</form>
+					<%}%>
 					<%if(path == 'admin' && locals.isAdmin){%>
-						<ul class="navbar-nav navbar-right pr-5">
+						<ul class="navbar-nav navbar-right pr-2">
 							<li class="nav-item">
-								<a class="btn btn-light text-dark" href="/admin/add">Add New Book</a>
+								<a class="btn btn-light text-dark" href="/admin/add" style="border-radius: 0px;">Add New Book</a>
 							</li>
 						</ul>
+						<form class="form-inline mt-2 mt-md-0 mr-2" method="POST" action="/admin/search">
+							<input class="searchform form-control mr-sm-2" type="text" placeholder="Search" name="searchdata" aria-label="Search">
+							<button class="searchform btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
+						</form>
 						<ul class="navbar-nav navbar-right">
 							<li class="nav-item">
 								<a class="nav-link text-white" href="/admin/logout">Logout</a>

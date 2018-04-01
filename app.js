@@ -33,7 +33,7 @@ app.use(session({
   saveUninitialized: true,
   resave: true
 }))
-
+app.use(logger('dev'));
 // passportjs setup
 app.use(passport.initialize());
 app.use(passport.session());
@@ -52,6 +52,7 @@ app.use(function (req, res, next) {
 });
 
 app.use('*', function(req, res, next){
+  console.log(req.ip + " ********************************");
   res.locals.user = req.user || null;
   res.locals.cart_total = req.session.cart ? req.session.cart.length: 0;
   res.locals.isAdmin = req.session.isAdmin;

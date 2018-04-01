@@ -4,11 +4,6 @@
 
   <body>
     <% include navigation %>
-      <div class="container-fluid">
-        <section class="jumbotron text-center">
-          <h1 class="jumbotron-heading">Hey <%=user.username%>! Welcome.</h1>
-        </section>
-      </div>
       <div class="album py-5">
         <div class="container">
           <div class="row">
@@ -26,7 +21,7 @@
                             <input type="submit" class="btn btn-sm btn-outline-secondary" value="Add">
                           </form>
                       </div>
-                      <small class="text-muted"> ₹<%= books[i].price%></small>
+                      <small class="text-muted"> $<%= books[i].price%></small>
                     </div>
                   </div>
                 </div>

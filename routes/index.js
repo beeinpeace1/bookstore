@@ -1,7 +1,5 @@
 var express = require('express');
 var router = express.Router();
-var login = require('./users/login');
-var signup = require('./users/signup');
 var API = require('./../models/dbapis');
 var passport = require('passport');
 var localStrategy = require('passport-local').Strategy;
@@ -20,37 +18,37 @@ router.get('/signup', function(req, res, next) {
 });
 
 // POST /signup
-router.post('/signup', function(req, res, next) {
-  signup(req, res, next);
-});
+router.post('/signup', function(req, resEx, next) {
+  const username = req.body.username || '';
+  const email = req.body.email || '';
+  const password = req.body.password || '';
+  const profile_picture = req.body.profile_picture || '';
 
-// POST OTP verification
-router.post('/verify', function(reqEx, resEx, next) {
-  const fromMail = global.users.otp;
-  const entered = reqEx.body.otp;
-  UserDetails = global.users.data;
-
-  if(fromMail == entered){
-    API.saveUserToDB(UserDetails, (err, res) => {
-        if(err) {
-            console.log(err);
-            resEx.render('includes/misc/intermediate.ejs', {title: 'Error', path: 'intermediate', class: 
-            "fas fa-times-circle fa-5x", message: "Failed"})
-        }
-
-        if(!err && res) {
-            resEx.render('includes/misc/intermediate.ejs', {title: 'Success', path: 'intermediate', class: 
-            "fas fa-check-circle fa-5x", message: "Sucess"})
-        }
-    });
-  } else {
-    resEx.render('includes/misc/intermediate.ejs', {title: 'Wrong', path: 'intermediate', class: 
-    "fas fa-times-circle fa-5x", message: "OTP Entered is Wrong"})
+  const UserDetails = {
+      username: username,
+      email: email,
+      password: password,
+      name: username,
+      isAdmin: false
   }
+
+  API.saveUserToDB(UserDetails, (err, res) => {
+    if(err) {
+        console.log(err);
+        resEx.render('includes/misc/intermediate.ejs', {title: 'Error', path: 'intermediate', class: 
+        "fas fa-times-circle fa-5x", message: "Failed"})
+    }
+
+    if(!err && res) {
+        resEx.render('includes/misc/intermediate.ejs', {title: 'Success', path: 'intermediate', class: 
+        "fas fa-check-circle fa-5x", message: "Sucess"})
+    }
+});
 });
 
 // GET Log in page
 router.get('/login', function(req, res, next) {
+  req.session.isAdmin = false;
   res.render('includes/login/login', { path: 'login', title: 'Book Store'});
 });
 
@@ -103,6 +101,30 @@ function ensureAuth(req, res, next) {
   }
 }
 
+// post for user searchterms 
+router.post('/user/search', ensureAuth, function(reqEx, resEx, nexy){
+  API.getAllBooks((books)=>{
+    var newbooks = books.filter(o=> o.title.toLowerCase().indexOf(reqEx.body.searchdata.toLowerCase()) >= 0);
+    resEx.render('index', { path: 'home', title: 'Book Store', books: newbooks});
+  })
+})
+
+// post for admin searchterms 
+router.post('/admin/search', Admin.ensureAdminCheck, function(reqEx, resEx, nexy){
+  API.getAllBooks((books)=>{
+    var newbooks = books.filter(o=> o.title.toLowerCase().indexOf(reqEx.body.searchdata.toLowerCase()) >= 0);
+    resEx.render('admin/listbooks.ejs', {path: 'admin', title: 'Admin Dashboard', books: newbooks})
+  })
+})
+
+// post for user searchterms 
+router.post('/guest/search', function(reqEx, resEx, nexy){
+  API.getAllBooks((books)=>{
+    var newbooks = books.filter(o=> o.title.toLowerCase().indexOf(reqEx.body.searchdata.toLowerCase()) >= 0);
+    resEx.render('includes/guests/guest.ejs', { path: 'guest', title: 'Book Store', books: newbooks});
+  })
+})
+
 // POST /login
 router.post('/login', passport.authenticate('local', { failureRedirect: '/login' }), function(req, res, next) {
   req.session.isAdmin = false;
@@ -119,7 +141,7 @@ router.get('/logout', ensureAuth, function(req, res, next) {
 // GET logout
 router.get('/guest', function(req, res, next) {
   API.getAllBooks((books)=>{
-    res.render('includes/guests/guest.ejs', {title: 'Book Store', path: '', books: books});
+    res.render('includes/guests/guest.ejs', {title: 'Book Store', path: 'guest', books: books});
   })
 });
 
@@ -128,7 +150,7 @@ router.get('/guest/show/:id', function(req, res, next) {
   if(id){
     API.getBookById(id, (err, book) => {
       if(book)
-        res.render('includes/guests/guest_show.ejs', {title: 'Book Store', path: '', book: book});
+        res.render('includes/guests/guest_show.ejs', {title: 'Book Store', path: 'guest', book: book});
     })
   }
 });
