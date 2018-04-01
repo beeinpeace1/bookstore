@@ -16,6 +16,7 @@ module.exports = {
   },
   ensureAdminCheck: (req, res, next)=> {
         if(req.session.isAdmin){
+            req.session.isAdmin = true;
             return next();
         } else {
             req.session.isAdmin = false;

@@ -16,6 +16,18 @@ var BookSchema = mongoose.Schema({
     },
     image_path: {
         type: String
+    },
+    no_of_views:{
+        type: Number
+    },
+    edition: {
+        type: String,
+    },
+    isbn: {
+        type: String,
+    },
+    category: {
+        type: String,
     }
 });
 

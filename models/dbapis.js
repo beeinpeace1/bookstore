@@ -1,5 +1,6 @@
 var User = require('./../models/users');
 var Books = require('./../models/books');
+var Category = require('./../models/category')
 var bc = require('bcrypt');
 
 module.exports = {
@@ -63,6 +64,14 @@ module.exports = {
             cb(res);
         })
     },
+    getAllCategory: function(cb) {
+        Category.find({}, (err, res)=> {
+            if(err) {
+                console.log(err.message);
+            }
+            cb(res);
+        })
+    },
     saveBookToDB: function(bookObject, cb) {
         Book = new Books(bookObject);
         Book.save(function(err, res) {
@@ -70,6 +79,15 @@ module.exports = {
                 console.log(err.message)
             }
                 cb(res);
+        })
+    },
+    saveCategoryToDB: function(catObj, cb) {
+        Cat = new Category(catObj);
+        Cat.save(function(err, res) {
+            if(err) {
+                console.log(err.message)
+            }
+            cb(res);
         })
     },
     getAdmin: function(q, cb) {
@@ -80,7 +98,7 @@ module.exports = {
             cb(res);
         })
     },
-    updateBook: function(id,d, cb) {
+    updateBook: function(id, d, cb) {
         Books.findByIdAndUpdate(id, {$set: d}, { new: true }, (err, update) => {
             if(err){
                 console.log(err);

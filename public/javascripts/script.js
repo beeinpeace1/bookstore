@@ -9,3 +9,11 @@ function addToCart(e, id){
 function removeFromCart(e){
     jQuery('#cart-total').html(jQuery('#cart-total').html() - 1);
 }
+
+$("#coverbook").load(function(){
+    alert("New image loaded");
+});
+
+function addnewCat(){
+    $('#newcategorydiv').show()
+}

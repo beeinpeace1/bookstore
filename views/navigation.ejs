@@ -20,14 +20,17 @@
 								<a class="nav-link text-white" href="/login">Users</a>
 							</li>
 						<%}%>
-						<%if(!user && path != 'admin' && path != 'intermediate' && path != 'verify'){%>
+						<%if(!user && path != 'admin' && path != 'intermediate' && path != 'guest'){%>
 							<li class="nav-item <%= path == 'login' ? 'active': '' %>">
 								<a class="nav-link" href="/login">Sign in</a>
 							</li>
 							<li class="nav-item <%= path == 'signup' ? 'active': '' %>">
 								<a class="nav-link" href="/signup">Sign up</a>
 							</li>
-							<%}else if(path != 'admin' && path != 'intermediate' && path != 'verify'){%>
+							<li class="nav-item <%= path == 'admin' ? 'active': '' %>">
+								<a class="nav-link" href="/admin">Admin</a>
+							</li>
+							<%}else if(path != 'admin' && path != 'intermediate' && path != 'guest'){%>
 								<li class="nav-item <%= path == 'home' ? 'active': '' %>">
 									<a class="nav-link" href="/">Books</a>
 								</li>
@@ -41,7 +44,7 @@
 								</li>
 								<%}%>
 					</ul>
-					<%if(user){%>
+					<%if(user && path != 'admin' && path != 'guest'){%>
 						<form class="form-inline mt-2 mt-md-0 mr-2" method="POST" action="/user/search">
 							<input class="searchform form-control mr-sm-2" type="text" placeholder="Search" name="searchdata" aria-label="Search">
 							<button class="searchform btn btn-outline-info my-2 my-sm-0" type="submit">Search</button>

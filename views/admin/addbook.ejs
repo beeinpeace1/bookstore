@@ -8,43 +8,83 @@
                 <div class="container">
                     <div class="row px-0">
                         <!-- <div class="col-md-12"> -->
-                        <div class="col-md-3 px-0">
-                        <form method="POST" action="/admin/add" enctype="multipart/form-data">
-                            <img class="card-img-top" style="height: 350px;" src="" alt="Card image cap">
-                            <input type="file" name="book_edit_image" id="book_image">
+                        <div class="col-md-3 form-group">
+                            <form method="POST" action="/admin/add" enctype="multipart/form-data">
+                                <img class="card-img-top" id="coverbook" style="height: 350px;" src="" alt="" style="background: red;">
+                                <label for="book_image">Book Cover</label>
+                                <input type="file" class="form-control" name="book_edit_image" id="book_image">
                         </div>
-                        <div class="col-md-9">
-                            <div class="pl-4 pt-2" style="width: 100%; height: 350px; background: #fff; border-radius: 5px;">
-                                <div class="row">
+                        <div class="col-md-9 form-group">
+                            <div class="pl-4 pt-2" style="width: 100%; background: #fff; border-radius: 5px;">
+                                <div class="form-group">
                                     <div class="col-md-10">
-                                        <b>Title:</b><input type="text" name="title" id="titleBook" value="">
+                                        <label for="titlebook">Title:</label>
+                                        <input id="titlebook" type="text" class="form-control" name="title" id="titleBook" value="">
                                     </div>
                                 </div>
-                                <div class="row">
+                                <div class="form-group">
                                     <div class="col-md-10">
-                                        <b>Desc: </b>
-                                        <textarea name="descBook" value="sads" id="" cols="80" rows="5"></textarea>
+                                        <label for="pricebook">Description:</label>
+                                        <textarea class="form-control" name="descBook" value="sads" id="" cols="80" rows="2"></textarea>
                                     </div>
                                 </div>
-                                <div class="row">
+                                <div class="form-group">
                                     <div class="col-md-10">
-                                        <b>Price:$</b> <input type="text" name="price" value="">
+                                        <label for="pricebook">Price:</label>
+                                        <input id="pricebook" class="form-control" type="number" name="price" value="">
                                     </div>
                                 </div>
-                                <div class="row">
+                                <div class="form-group">
                                     <div class="col-md-10">
-                                        <b>Author:</b> <input type="text" name="author" value="">
+                                        <label for="authorbook">Author:</label>
+                                        <input id="authorbook" class="form-control" type="text" name="author" value="">
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="py-2 col-md-10">
-                                            <input type="submit" class="btn btn-warning" value="Submit">
-                                            <input type="hidden" name="bookid" value="">
+                                <div class="form-group">
+                                    <div class="col-md-10">
+                                        <label for="edition">Edition:</label>
+                                        <input id="edition" class="form-control" type="text" name="edition" value="">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-10">
+                                        <label for="isbn">ISBN:</label>
+                                        <input id="isbn" class="form-control" type="text" name="isbn" value="">
+                                    </div>
+                                </div>
+                                <div class="row pl-3">
+                                    <div class="form-group col-md-12 row">
+                                        <div class="col-md-9">
+                                            <label for="categorybook">Category:</label>
+                                            <select class="form-control" name="category" id="categorybook">
+                                                <% for(j = 0; j < categories.length; j++) { %>
+                                                    <option value="<%=categories[j].category%>">
+                                                        <%=categories[j].category%>
+                                                    </option>
+                                                    <%}%>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <label for="">&nbsp;</label>
+                                            <input type="button" onclick="addnewCat()" class="btn btn-primary" value="+"></input>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-12 row" id="newcategorydiv" style="display:none;">
+                                        <div class="col-md-9">
+                                            <label for="newcategorybook">New Category:</label>
+                                            <input id="newcategorybook" class="form-control" type="text" name="newcategorybook" value="">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="py-2 col-md-10 pb-2">
+                                        <input type="submit" class="btn btn-warning" value="Submit Book">
+                                        <input type="hidden" name="bookid" value="">
                                         </form>
                                     </div>
                                 </div>
                             </div>
-                        </form>
+                            </form>
                         </div>
                     </div>
                 </div>
