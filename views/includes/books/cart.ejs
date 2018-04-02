@@ -30,6 +30,10 @@
                       <%= books[i].title%>
                     </h5>
                     <p class="card-text"><%=books[i].desc%></p>
+                    <p class="card-text">                    By: <i><%=books[i].author%></i><br>
+                      ISBN: <i><%=books[i].isbn%></i><br>
+                      Category: <i><%=books[i].category%></i><br><br>
+                    </p>
                     <div class="d-flex justify-content-between align-items-center">
                       <div class="btn-group" id="link-holder">
                         <a href="/book/show/<%=books[i]._id%>">

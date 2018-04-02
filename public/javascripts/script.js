@@ -17,3 +17,7 @@ $("#coverbook").load(function(){
 function addnewCat(){
     $('#newcategorydiv').show()
 }
+
+function sorters(){
+    jQuery.post('/admin/order/', {kind: $('#kind').val(), order: $('#order').val()})
+}

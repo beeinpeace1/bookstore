@@ -45,6 +45,11 @@
                                     </div>
                                 </div>
                                 <div class="row">
+                                    <div class="col-md-10">
+                                        Category: <em><span><%=book.category%></span></em>
+                                    </div>
+                                </div>
+                                <div class="row">
                                     <div class="py-2 col-md-10">
                                         <form onsubmit="addToCart(event, '<%=book.id%>')">
                                             <input type="submit" class="btn btn-warning" value="Add to Cart">

@@ -105,3 +105,10 @@ button[type="submit"] {
 .show {
   display: block;
 }
+
+.sorters{
+  padding: 3px 10px;
+  margin-bottom: 5px;
+  margin-left: 2px;
+  background: none;
+}
