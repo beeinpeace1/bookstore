@@ -10,10 +10,6 @@ function removeFromCart(e){
     jQuery('#cart-total').html(jQuery('#cart-total').html() - 1);
 }
 
-$("#coverbook").load(function(){
-    alert("New image loaded");
-});
-
 function addnewCat(){
     $('#newcategorydiv').show()
 }
@@ -21,3 +17,19 @@ function addnewCat(){
 function sorters(){
     jQuery.post('/admin/order/', {kind: $('#kind').val(), order: $('#order').val()})
 }
+
+$('#rinputPassword').keyup(function(e){
+    if($('#inputPassword').val().length > 0 && $('#inputPassword').val() == $('#rinputPassword').val()){
+        $('#float-checkpass').fadeIn()
+        $('#float-checkpass1').fadeOut()
+    } else {
+        $('#float-checkpass').fadeOut()
+        $('#float-checkpass1').fadeIn()
+    }
+})
+
+$('.form-signup').submit(function(event){
+    if($('#inputPassword').val() != $('#rinputPassword').val()){
+        event.preventDefault();
+    }
+})

@@ -54,6 +54,12 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="col-md-10">
+                                        <label for="noofbooks">No of Books:</label>
+                                        <input id="noofbooks" class="form-control" type="number" name="noofbooks" value="<%=book.total_number_of_books%>">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-10">
                                         <label for="categorybook">Category:</label>
                                         <select class="form-control" name="category" id="categorybook">
                                             <% for(j = 0; j < categories.length; j++) { %>

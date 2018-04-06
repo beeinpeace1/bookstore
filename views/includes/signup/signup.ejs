@@ -14,8 +14,12 @@
 						<input type="email" id="inputEmail" name="email" class="form-control" placeholder="Email address" required autofocus>
 						<label for="inputPassword" class="sr-only">Password</label>
 						<input type="password" id="inputPassword" name="password" class="form-control" placeholder="Password" required>
-						<label for="rinputPassword" class="sr-only">Repeat Password</label>
-						<input type="password" id="rinputPassword" name="repassword" class="form-control" placeholder="Repeat Password" required>
+						<div id="signup-form-holder">
+							<i class="fas fa-check" style="display:none;" id="float-checkpass"></i>
+							<i class="fas fa-times" style="display:none;" id="float-checkpass1"></i>
+							<label for="rinputPassword" class="sr-only">Repeat Password</label>
+							<input type="password" id="rinputPassword" name="repassword" class="form-control" placeholder="Repeat Password" required>
+						</div>
 						<button class="btn btn-lg btn-primary btn-block" type="submit">Sign up</button>
 					</form>
 				</div>

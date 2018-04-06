@@ -12,18 +12,23 @@
             dsc = (locals.order && order == '1') ? 'selected': '';
             prc =( locals.kind && kind == 'price') ? 'selected': '';
             viv =( locals.kind && kind == 'no_of_views') ? 'selected': '';
+            fav =( locals.kind && kind == 'fav_count') ? 'selected': '';
+            rem =( locals.kind && kind == 'total_number_of_books') ? 'selected': '';
           %>
-          <div class="ml-auto">
-            <form action="/admin/order/" method="POST">
+          <div style="margin-bottom:10px;">
+            <form style="display:inline;" action="/admin/order/" method="POST">
             <select class="sorters" name="kind" id="kind" onchange="this.form.submit()">
               <option value="price" <%=prc%>>price</option>
               <option value="views" <%=viv%>>views</option>
+              <option value="favorite" <%=fav%>>favorite</option>
+              <option value="remain" <%=rem%>>Books remaining</option>
             </select>
             <select class="sorters" name="order" id="order" onchange="this.form.submit()">
-              <option value=0 <%=asc%>>Ascending</option>
-              <option value=1 <%=dsc%>> Descending</option>
+              <option value=0 <%=asc%>>Low-High</option>
+              <option value=1 <%=dsc%>> High-Low</option>
             </select>
           </form>
+          <a id='checkbycat' href="/admin/checkbycat">Check Books by Category</a>
           </div>
           <div class="row">
             <% if(books.length > 0) {for(var i=0; i<books.length; i++) {%>
@@ -34,7 +39,6 @@
                   </a>
                   <div class="card-body">
                     <h5 class="card-title">
-                      Title:
                       <%= books[i].title%>
                     </h5>
                     <p class="card-text">
@@ -54,23 +58,31 @@
                               <%= books[i].category%>
                     </p>
                     <div class="d-flex justify-content-between align-items-center">
-                      <div class="btn-group" id="link-holder">
-                        <a href="/admin/edit/<%=books[i].id%>">
-                          <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-                        </a>
-                        <form method="post" action="/admin/delete">
-                          <input type="submit" class="btn btn-sm btn-outline-secondary" value="Delete"></input>
-                          <input type="hidden" name="bookid" value="<%=books[i].id%>">
-                        </form>
-                      </div>
-
-                      <small class="text-muted">
-                        <i class="fas fa-eye"></i>
-                        <%= books[i].no_of_views%>
-                      </small>
-                      <small class="text-muted">$
-                        <%= books[i].price%>
-                      </small>
+                      <a href="/admin/report/<%=books[i].id%>">
+                        <button type="button" class="btn btn-sm btn-outline-secondary">Report</button>
+                      </a>
+                      <a href="/admin/edit/<%=books[i].id%>">
+                        <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+                      </a>
+                      <form method="post" action="/admin/delete">
+                        <input type="submit" class="btn btn-sm btn-outline-secondary" value="Delete"></input>
+                        <input type="hidden" name="bookid" value="<%=books[i].id%>">
+                      </form>
+                    </div><br/>
+                    <div class="d-flex justify-content-between">
+                        <small class="text-muted">$<%= books[i].price%></small>
+                        <small class="text-muted">
+                          <i class="fas fa-shopping-cart"></i>
+                          <%= books[i].total_number_of_books%>
+                        </small>
+                        <small class="text-muted">
+                          <i class="fas fa-star"></i>
+                          <%= books[i].fav_count%>
+                        </small>
+                        <small class="text-muted">
+                          <i class="fas fa-eye"></i>
+                          <%= books[i].no_of_views%>
+                        </small>
                     </div>
                   </div>
                 </div>

@@ -7,7 +7,7 @@
       <div class="album py-5">
         <div class="container">
           <div class="row">
-            <% if(books.length > 0){for(var i=0; i<books.length; i++) {%>
+            <% if(books.length > 0){for(var i=0; i<books.length; i++) { if(books[i].total_number_of_books > 0) { %>
               <div class="col-md-3">
                 <div class="card mb-4 box-shadow">
                   <a href="/book/show/<%=books[i].id%>"><img class="card-img-top" src="<%= books[i].image_path%>" alt="Card image cap"></a>
@@ -28,10 +28,11 @@
                       </div>
                       <small class="text-muted"> $<%= books[i].price%></small>
                     </div>
+                    <small class="text-muted">Remaining: <%= books[i].total_number_of_books%> Books</small>
                   </div>
                 </div>
               </div>
-              <% } } else { %>
+              <% } }} else { %>
                 <div class="col-md-12">
                 <div class="text-center mx-auto">
                     <h1> No books available! </h1>

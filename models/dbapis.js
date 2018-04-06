@@ -54,7 +54,13 @@ module.exports = {
             cb(null, res);
         })
     },
-    getBooksByAuthor: function(enteredPassword, hash, cb) {
+    getBooksByCategory: function(q, cb) {
+        Books.find(q, (err, res)=> {
+            if(err) {
+                console.log(err.message);
+            }
+            cb(res);
+        })
     },
     getAllBooks: function(cb) {
         Books.find({}, (err, res)=> {

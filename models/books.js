@@ -20,6 +20,9 @@ var BookSchema = mongoose.Schema({
     no_of_views:{
         type: Number
     },
+    fav_count:{
+        type: Number
+    },
     edition: {
         type: String,
     },
@@ -28,6 +31,9 @@ var BookSchema = mongoose.Schema({
     },
     category: {
         type: String,
+    },
+    total_number_of_books: {
+        type: Number,
     }
 });
 

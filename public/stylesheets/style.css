@@ -1,13 +1,27 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900');
+@import url('https://fonts.googleapis.com/css?family=Playfair+Display:400,700,900');
+
 html, body {
   padding-top: 2rem;
   padding-bottom: 3rem;
   color: #5a5a5a;
   height: 100%;
+  font-family: 'Arial';
+}
+
+.navbar-brand {
+  font-family: 'Playfair Display';
+  font-weight: 900;
+  text-transform: uppercase;
 }
 
 .card-img-top {
     height: 20vw;
     object-fit: contain;
+}
+
+.card-title {
+  font-weight:700;
 }
 
 body {
@@ -111,4 +125,41 @@ button[type="submit"] {
   margin-bottom: 5px;
   margin-left: 2px;
   background: none;
+}
+
+#signup-form-holder {
+  position: relative;
+}
+
+#float-checkpass{
+  color: green;
+}
+
+##float-checkpass1{
+  color: red;
+}
+
+#float-checkpass, #float-checkpass1 {
+  position: absolute;
+  left: 315px;
+  top: 15px;
+}
+
+#checkbycat{
+  padding: 3px 5px;
+  border: 1px solid #000;
+}
+
+ol{
+  padding: 0;
+}
+
+ol li {
+  padding: 0;
+  margin: 0;
+  font-size: 1.6em;
+}
+
+ol li a {
+  color: black;
 }

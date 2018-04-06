@@ -52,6 +52,12 @@
                                         <input id="isbn" class="form-control" type="text" name="isbn" value="">
                                     </div>
                                 </div>
+                                <div class="form-group">
+                                    <div class="col-md-10">
+                                        <label for="noofbooks">Number Of Books:</label>
+                                        <input id="noofbooks" class="form-control" type="number" name="noofbooks" value="">
+                                    </div>
+                                </div>
                                 <div class="row pl-3">
                                     <div class="form-group col-md-12 row">
                                         <div class="col-md-9">
@@ -78,9 +84,12 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="py-2 col-md-10 pb-2">
-                                        <input type="submit" class="btn btn-warning" value="Submit Book">
+                                        <input type="submit" class="btn btn-success" value="Submit Book">
                                         <input type="hidden" name="bookid" value="">
                                         </form>
+                                        <a href="/admin/listbooks" class="text-white">
+                                            <button class="btn btn-danger">Cancel</button>
+                                        </a>
                                     </div>
                                 </div>
                             </div>

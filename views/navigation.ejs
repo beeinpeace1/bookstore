@@ -1,6 +1,6 @@
 <header>
 	<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-		<a class="navbar-brand" href="<%= path == 'admin' ? '/admin/listbooks': '/'%>">Books Store</a>
+		<a class="navbar-brand" href="<%= path == 'admin' ? '/admin/listbooks': '/'%>">Book Store</a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse"
 		 aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
@@ -29,6 +29,9 @@
 							</li>
 							<li class="nav-item <%= path == 'admin' ? 'active': '' %>">
 								<a class="nav-link" href="/admin">Admin</a>
+							</li>
+							<li class="nav-item <%= path == 'guest' ? 'active': '' %>">
+								<a class="nav-link" href="/guest">Guest</a>
 							</li>
 							<%}else if(path != 'admin' && path != 'intermediate' && path != 'guest'){%>
 								<li class="nav-item <%= path == 'home' ? 'active': '' %>">
