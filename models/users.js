@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/bookstore');
+mongoose.connect(process.env.MONGO_LINK);
 
 var UserSchema = mongoose.Schema({
     username: {
