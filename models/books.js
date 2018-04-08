@@ -26,6 +26,9 @@ var BookSchema = mongoose.Schema({
     edition: {
         type: String,
     },
+    publisher: {
+        type: String,
+    },
     isbn: {
         type: String,
     },
@@ -33,6 +36,9 @@ var BookSchema = mongoose.Schema({
         type: String,
     },
     total_number_of_books: {
+        type: Number,
+    },
+    total_number_of_books_bought: {
         type: Number,
     }
 });

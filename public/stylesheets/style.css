@@ -1,12 +1,15 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900');
 @import url('https://fonts.googleapis.com/css?family=Playfair+Display:400,700,900');
+@import url('https://fonts.googleapis.com/css?family=Montserrat:100,200,300,400,500,600,700,800,900');
+@page { size: auto;  margin: 5mm; }
 
 html, body {
   padding-top: 2rem;
   padding-bottom: 3rem;
   color: #5a5a5a;
   height: 100%;
-  font-family: 'Arial';
+  font-family: 'Roboto';
+  font-weight: 500;
 }
 
 .navbar-brand {
@@ -147,7 +150,6 @@ button[type="submit"] {
 
 #checkbycat{
   padding: 3px 5px;
-  border: 1px solid #000;
 }
 
 ol{
@@ -162,4 +164,12 @@ ol li {
 
 ol li a {
   color: black;
+}
+
+.report-gen {
+  font-family: 'Playfair Display';
+}
+
+.report-gen .container {
+  box-shadow: 1px 1px 5px 1px rgba(10, 10, 10, .2);
 }

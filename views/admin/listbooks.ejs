@@ -14,6 +14,7 @@
             viv =( locals.kind && kind == 'no_of_views') ? 'selected': '';
             fav =( locals.kind && kind == 'fav_count') ? 'selected': '';
             rem =( locals.kind && kind == 'total_number_of_books') ? 'selected': '';
+            sold =( locals.kind && kind == 'total_number_of_books_bought') ? 'selected': '';
           %>
           <div style="margin-bottom:10px;">
             <form style="display:inline;" action="/admin/order/" method="POST">
@@ -22,13 +23,14 @@
               <option value="views" <%=viv%>>views</option>
               <option value="favorite" <%=fav%>>favorite</option>
               <option value="remain" <%=rem%>>Books remaining</option>
+              <option value="sold" <%=sold%>>Books Sold</option>
             </select>
             <select class="sorters" name="order" id="order" onchange="this.form.submit()">
               <option value=0 <%=asc%>>Low-High</option>
               <option value=1 <%=dsc%>> High-Low</option>
             </select>
           </form>
-          <a id='checkbycat' href="/admin/checkbycat">Check Books by Category</a>
+          <a id='checkbycat' href="/admin/checkbycat">Books by Category</a>
           </div>
           <div class="row">
             <% if(books.length > 0) {for(var i=0; i<books.length; i++) {%>
@@ -59,29 +61,33 @@
                     </p>
                     <div class="d-flex justify-content-between align-items-center">
                       <a href="/admin/report/<%=books[i].id%>">
-                        <button type="button" class="btn btn-sm btn-outline-secondary">Report</button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary rounded-0">Report</button>
                       </a>
                       <a href="/admin/edit/<%=books[i].id%>">
-                        <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary rounded-0">Edit</button>
                       </a>
                       <form method="post" action="/admin/delete">
-                        <input type="submit" class="btn btn-sm btn-outline-secondary" value="Delete"></input>
+                        <input type="submit" class="btn btn-sm btn-outline-secondary rounded-0" value="Delete"></input>
                         <input type="hidden" name="bookid" value="<%=books[i].id%>">
                       </form>
                     </div><br/>
                     <div class="d-flex justify-content-between">
-                        <small class="text-muted">$<%= books[i].price%></small>
-                        <small class="text-muted">
+                        <small class="text-muted" title="Price">$<%= books[i].price%></small>
+                        <small class="text-muted" title="Books available">
                           <i class="fas fa-shopping-cart"></i>
                           <%= books[i].total_number_of_books%>
                         </small>
-                        <small class="text-muted">
+                        <small class="text-muted" title="Favorite count">
                           <i class="fas fa-star"></i>
                           <%= books[i].fav_count%>
                         </small>
-                        <small class="text-muted">
+                        <small class="text-muted" title="No of Views">
                           <i class="fas fa-eye"></i>
                           <%= books[i].no_of_views%>
+                        </small>
+                        <small class="text-muted" title="No of Views">
+                          <i class="fas fa-eye"></i>
+                          <%= books[i].total_number_of_books_bought%>
                         </small>
                     </div>
                   </div>

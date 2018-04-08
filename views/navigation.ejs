@@ -9,13 +9,16 @@
 			
 			<style>
 				.navbar {
-					background: #e3003d !important;
+					background: #014f78 !important;
 				}
 			</style>
 			<%}%>
 				<div class="collapse navbar-collapse" id="navbarCollapse">
 					<ul class="navbar-nav mr-auto">
 						<%if(path == 'admin'){%>
+							<li class="nav-item">
+								<a class="nav-link text-white" href="/admin/listbooks">Home</a>
+							</li>
 							<li class="nav-item">
 								<a class="nav-link text-white" href="/login">Users</a>
 							</li>

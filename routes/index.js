@@ -8,8 +8,14 @@ var _ = require('async');
 
 /* GET home page. */
 router.get('/', ensureAuth, function (req, res, next) {
+  var cart = req.session.cart || { };     
+  var finalTotal = 0;
+  Object.keys(cart).map((key)=>{
+    finalTotal += cart[key].total;
+  })
+
   API.getAllBooks((books) => {
-    res.render('index', { path: 'home', title: 'Book Store', books: books });
+    res.render('index', { path: 'home', title: 'Book Store', books: books, cart_total: finalTotal });
   })
 });
 
@@ -170,15 +176,20 @@ router.get('/guest/show/:id', function (req, res, next) {
 // GET book show
 router.get('/book/show/:id', ensureAuth, function (req, res, next) {
   var id = req.params.id;
+  var finalTotal = 0;
+  var cart = req.session.cart || {};
+  Object.keys(cart).map((key)=>{
+    finalTotal += cart[key].total;
+  })
   if (id) {
     API.getBookById(id, (err, book) => {
       if (book) {
         API.updateBook(id, { no_of_views: (book.no_of_views ? book.no_of_views : 0) + 1 }, (updatedBook) => {
-          res.render('includes/books/show.ejs', { title: 'Book Store', path: '', book: book });
+          res.render('includes/books/show.ejs', { title: 'Book Store', path: '', book: book , cart_total: finalTotal});
         })
       }
       else
-        res.render('includes/books/not_found.ejs', { title: 'Book Store', path: '', book: [] });
+        res.render('includes/books/not_found.ejs', { title: 'Book Store', path: 'home', book: [], cart_total: finalTotal });
     })
   }
 });
@@ -186,37 +197,89 @@ router.get('/book/show/:id', ensureAuth, function (req, res, next) {
 // GET remove book from cart
 router.get('/cart/remove/:id', ensureAuth, function (req, res, next) {
   var id = req.params.id;
-  var cart = req.session.cart || 0;
-  if (cart.length) {
-    var index = cart.findIndex(o => o._id == id);
-    req.session.cart.splice(index, 1);
+  var cart = req.session.cart || {};
+  if (cart[id].total > 1) {
+    cart[id].total = cart[id].total - 1;
 
     API.getBookById(id, (err, book) => {
       if (book) {
         API.updateBook(id, { total_number_of_books: (book.total_number_of_books ? book.total_number_of_books : 0) + 1 }, ()=>{});
-        req.session.cart.push(book)
+        req.session.cart = cart;
       }
     });
+  } else {
+    API.getBookById(id, (err, book) => {
+      if (book) {
+        API.updateBook(id, { total_number_of_books: (book.total_number_of_books ? book.total_number_of_books : 0) + 1 }, ()=>{});
+        req.session.cart = cart;
+      }
+    });
+    delete cart[id];
+    req.session.cart = cart;
   }
   res.redirect('/cart')
 });
 
 // GET logout
 router.get('/cart', ensureAuth, function (req, res, next) {
-  const cart = req.session.cart || [];
-  res.render('includes/books/cart.ejs', { title: 'Book Store', path: '', books: cart });
+  const cart = req.session.cart || {};
+  var finalCart = [];
+  Object.keys(cart).map((key)=>{
+    finalCart.push(cart[key])
+  })
+
+  var finalTotal = 0;
+  var totalPrice = 0;
+  Object.keys(cart).map((key)=>{
+    finalTotal += cart[key].total;
+    totalPrice += cart[key].items.price * cart[key].total;
+  })
+
+  res.render('includes/books/cart.ejs', { title: 'Book Store', path: '', books: finalCart, cart_total: finalTotal || 0 , cart_price: totalPrice});
+});
+
+router.get('/cart/checkout', ensureAuth, function (req, res, next) {
+  const cart = req.session.cart || {};
+  var finalCart = [];
+  Object.keys(cart).map((key)=>{
+    finalCart.push(cart[key])
+  })
+
+  var finalTotal = 0;
+  var totalPrice = 0;
+  Object.keys(cart).map((key)=>{
+    finalTotal += cart[key].total;
+    totalPrice += cart[key].items.price * cart[key].total;
+    console.log(cart[key].items)
+    API.updateBook(key, { total_number_of_books_bought: (cart[key].items.total_number_of_books_bought || cart[key].items.total_number_of_books_bought == 0) ? cart[key].items.total_number_of_books_bought + cart[key].total : 0 }, ()=> {})
+  })
+
+
+  delete req.session.cart;
+  res.render('includes/books/checkout.ejs', { title: 'Book Store', path: '', books: finalCart, cart_total:  0 , cart_price: totalPrice});
 });
 
 router.post('/cart/add/:id', ensureAuth, (req, res, next) => {
-  req.session.cart = req.session.cart || [];
+  var cart = req.session.cart || { };
   const id = req.params.id;
   if (id) {
     API.getBookById(id, (err, book) => {
       if (book) {
         API.updateBook(id, { fav_count: (book.fav_count ? book.fav_count : 0) + 1, total_number_of_books: (book.total_number_of_books ? book.total_number_of_books : 0) - 1 }, ()=>{});
-        req.session.cart.push(book)
+        if(!cart[id]){
+          cart[id] = {};
+          cart[id]['items'] = {};
+          cart[id]['total'] = 0;
+        }
+        cart[id].items = book;
+        cart[id].total = (cart[id].total || cart[id].total == 0) ? cart[id].total + 1 : 0;
+        req.session.cart = cart
       }
-      res.json({ total: req.session.cart.length || 0 })
+      var finalTotal = 0;
+      Object.keys(cart).map((key)=>{
+        finalTotal += cart[key].total;
+      })
+      res.json({ total: finalTotal || 0 })
     })
   }
 })
@@ -262,6 +325,17 @@ router.get('/admin/edit/:id', Admin.ensureAdminCheck, function (req, res, next) 
   }
 });
 
+router.get('/admin/report/:id', Admin.ensureAdminCheck, function (req, res, next) {
+  var id = req.params.id;
+  if (id) {
+    API.getBookById(id, (err, book) => {
+      if (book) {
+          res.render('admin/report.ejs', { title: 'Book Store', path: 'admin', book: book });
+      }
+    })
+  }
+});
+
 router.get('/admin/add/', Admin.ensureAdminCheck, function (req, res, next) {
   API.getAllCategory((cats) => {
     res.render('admin/addbook.ejs', { title: 'Book Store', path: 'admin', categories: cats });
@@ -270,9 +344,18 @@ router.get('/admin/add/', Admin.ensureAdminCheck, function (req, res, next) {
 
 router.get(['/admin/checkbycat/:q', '/admin/checkbycat/'], Admin.ensureAdminCheck, function (req, res, next) {
   console.log(req.params);
+  var cat_send = {};
   if(req.params.q == undefined){
     API.getAllCategory((cats) => {
-      res.render('admin/categories.ejs', { title: 'Book Store', path: 'admin', categories: cats });
+      cats.map((e, i)=>{
+        API.getBooksByCategory({category: e.category}, (books) => {
+          cat_send[e.category] = books.length;
+          if( i + 1 == cats.length){
+            console.log(cat_send)
+            res.render('admin/categories.ejs', { title: 'Book Store', path: 'admin', categories: cats, category_books: cat_send });
+          }
+        })  
+      });
     })
   } else {
     API.getBooksByCategory({category: req.params.q}, (books) => {
@@ -294,7 +377,7 @@ router.get('/admin/show/:id', Admin.ensureAdminCheck, function (req, res, next) 
 
 router.post('/admin/order/', Admin.ensureAdminCheck, function (req, res, next) {
   var order = req.body.order;
-  var kind = req.body.kind == "views" ? "no_of_views" : req.body.kind == "favorite" ? "fav_count" : req.body.kind == "remain" ? "total_number_of_books" : req.body.kind;;
+  var kind = req.body.kind == "views" ? "no_of_views" : req.body.kind == "favorite" ? "fav_count" : req.body.kind == "remain" ? "total_number_of_books" : req.body.kind == "sold" ? "total_number_of_books_bought" : req.body.kind;
 
   API.getAllBooks((books) => {
     _.sortBy(books, function (x, callback) {
@@ -316,6 +399,7 @@ router.post('/admin/add/', Admin.ensureAdminCheck, function (req, res, next) {
   const author = req.body.author || "no author found";
   const bookid = req.body.bookid || "";
   const edition = req.body.edition || "";
+  const publisher = req.body.publisher || "";
   const isbn = req.body.isbn || "";
   const noofbooks = req.body.noofbooks || 1;
   const mime = req.files[0] ? req.files[0].mimetype.split('/')[1] : 'png';
@@ -324,11 +408,7 @@ router.post('/admin/add/', Admin.ensureAdminCheck, function (req, res, next) {
   const category = newcategory.length > 0 ? newcategory : req.body.category;
 
   if (newcategory) {
-    API.saveCategoryToDB({ category: newcategory }, (catob) => {
-      if (catob) {
-        console.log("Saved!");
-      }
-    })
+    API.saveCategoryToDB({ category: newcategory }, (catob) => {})
   }
 
   const updateBookDetails = {
@@ -337,11 +417,13 @@ router.post('/admin/add/', Admin.ensureAdminCheck, function (req, res, next) {
     price: price,
     author: author,
     edition: edition,
+    publisher: publisher,
     isbn: isbn,
     image_path: filename,
     category: category,
     no_of_views: 0,
     fav_count: 0,
+    total_number_of_books_bought: 0,
     total_number_of_books: noofbooks
   };
 
@@ -369,11 +451,18 @@ router.post('/admin/edit/', Admin.ensureAdminCheck, function (req, res, next) {
   const author = req.body.author || "no author found";
   const edition = req.body.edition || "null";
   const isbn = req.body.isbn || "null";
+  const publisher = req.body.publisher || "";
   const bookid = req.body.bookid;
-  const category = req.body.category;
   const noofbooks = req.body.noofbooks;
+  const newcategory = (req.body.newcategorybook && req.body.newcategorybook.length) > 0 ? req.body.newcategorybook : "";
+  const category = newcategory.length > 0 ? newcategory : req.body.category;
   const mime = req.files[0] ? req.files[0].mimetype.split('/')[1] : 'png';
   var currentBook = {};
+
+  if (newcategory) {
+    API.saveCategoryToDB({ category: newcategory }, (catob) => {})
+  }
+  
   API.getBookById(bookid, (err, book) => {
     if (book) {
       currentBook = book;
@@ -386,12 +475,12 @@ router.post('/admin/edit/', Admin.ensureAdminCheck, function (req, res, next) {
         author: author,
         isbn: isbn,
         edition: edition,
+        publisher: publisher,
         category: category,
         image_path: filename,
         total_number_of_books: noofbooks
 
       };
-      console.log()
       API.updateBook(bookid, updateBookDetails, (updatedBook) => {
         res.render('admin/showbook.ejs', { title: 'Book Store', path: 'admin', book: updatedBook });
       })
